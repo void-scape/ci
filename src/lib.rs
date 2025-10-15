@@ -1,3 +1,7 @@
+pub fn available_jobs() -> &'static [&'static str] {
+    &["check", "clippy", "fmt", "test", "typos"]
+}
+
 pub fn generate_workflow(
     workflow_name: &str,
     jobs: impl Iterator<Item: AsRef<str>>,
@@ -10,9 +14,11 @@ pub fn generate_workflow(
             workflow.push_str("jobs:\n");
         }
         match job.as_ref() {
-            "test" => workflow.push_str(include_str!("test.yaml")),
-            "lint" => workflow.push_str(include_str!("lint.yaml")),
             "check" => workflow.push_str(include_str!("check.yaml")),
+            "clippy" => workflow.push_str(include_str!("clippy.yaml")),
+            "fmt" => workflow.push_str(include_str!("fmt.yaml")),
+            "test" => workflow.push_str(include_str!("test.yaml")),
+            "typos" => workflow.push_str(include_str!("typos.yaml")),
             job => {
                 return Err(format!("unrecognized job {job}"));
             }

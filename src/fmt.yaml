@@ -1,7 +1,9 @@
-  check:
-    name: cargo check
+  fmt:
+    name: cargo fmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo check --all-features --workspace
+        with:
+          components: rustfmt
+      - run: cargo fmt --all -- --check

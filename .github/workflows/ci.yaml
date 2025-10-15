@@ -7,93 +7,56 @@ on:
 env:
   CARGO_TERM_COLOR: always
 jobs:
-  # Based on workflow template from rust-ci-release-template
-  # Copyright 2021 Dotan Nahum
-  # Licensed under Apache License 2.0
-  # Source: https://github.com/SpectralOps/rust-ci-release-template
-  test:
-    name: Test Suite
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      - uses: Swatinem/rust-cache@v1
-
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-  # Based on workflow template from rust-ci-release-template
-  # Copyright 2021 Dotan Nahum
-  # Licensed under Apache License 2.0
-  # Source: https://github.com/SpectralOps/rust-ci-release-template
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
-
-      - uses: Swatinem/rust-cache@v1
-
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
-
-      - name: Run rustdoc lints
-        uses: actions-rs/cargo@v1
-        env:
-          RUSTDOCFLAGS: "-D missing_docs -D rustdoc::missing_doc_code_examples"
-        with:
-          command: doc
-          args: --workspace --all-features --no-deps --document-private-items
-  # Based on workflow template from rust-ci-release-template
-  # Copyright 2021 Dotan Nahum
-  # Licensed under Apache License 2.0
-  # Source: https://github.com/SpectralOps/rust-ci-release-template
   check:
-    name: Check
+    name: cargo check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo check --all-features --workspace
+  clippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      - uses: Swatinem/rust-cache@v1
-
-      - name: Run cargo check
-        uses: actions-rs/cargo@v1
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          command: check
+          components: clippy, rustfmt
+      - run: cargo clippy --all-features -- -D warnings
+  fmt:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all -- --check
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --all-features --workspace
+  typos:
+      name: typos
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v5
+        - uses: dtolnay/rust-toolchain@stable
+          run: cargo install typos-cli && typos

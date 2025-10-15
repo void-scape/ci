@@ -1,5 +1,5 @@
-  test:
-    name: cargo test
+  clippy:
+    name: cargo clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -11,4 +11,6 @@
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test --all-features --workspace
+        with:
+          components: clippy, rustfmt
+      - run: cargo clippy --all-features -- -D warnings

@@ -6,7 +6,14 @@ fn main() -> ExitCode {
     let workflow_name = match args.next() {
         Some(name) => name,
         None => {
-            println!("Usage: {binary} workflow-name [test] [lint] [check]");
+            println!(
+                "Usage: {binary} workflow-name {}",
+                ci::available_jobs()
+                    .iter()
+                    .map(|job| format!("[{job}]"))
+                    .collect::<Vec<_>>()
+                    .join(" ")
+            );
             return ExitCode::FAILURE;
         }
     };
