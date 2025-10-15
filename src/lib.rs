@@ -36,7 +36,8 @@ pub fn generate_workflow(
 }
 
 fn install_dependencies(dependencies: &str) -> String {
-    format!("- name: Install Dependencies\n        run: \
+    format!(
+        "- name: Install Dependencies\n        run: \
       sudo apt-get update; sudo apt-get install \
       --no-install-recommends {dependencies}"
     )
