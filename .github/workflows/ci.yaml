@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo check --all-features --workspace
   clippy:
@@ -29,7 +36,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
-      - run: cargo clippy --all-features -- -D warnings
+      - run: cargo clippy --all-features --workspace -- -D warnings
   fmt:
     name: cargo fmt
     runs-on: ubuntu-latest
@@ -54,9 +61,22 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo test --all-features --workspace
   typos:
-      name: typos
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v5
-        - uses: dtolnay/rust-toolchain@stable
-        - run: cargo install typos-cli && typos
+    name: typos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: crate-ci/typos@v1.38.1
+  doc:
+    name: cargo doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo doc --no-deps

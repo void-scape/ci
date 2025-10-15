@@ -1,7 +1,6 @@
   typos:
-      name: typos
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v5
-        - uses: dtolnay/rust-toolchain@stable
-        - run: cargo install typos-cli && typos
+    name: typos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: crate-ci/typos@v1.38.1

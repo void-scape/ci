@@ -1,5 +1,5 @@
 pub fn available_jobs() -> &'static [&'static str] {
-    &["check", "clippy", "fmt", "test", "typos"]
+    &["check", "clippy", "fmt", "test", "typos", "doc"]
 }
 
 pub fn generate_workflow(
@@ -19,6 +19,7 @@ pub fn generate_workflow(
             "fmt" => workflow.push_str(include_str!("fmt.yaml")),
             "test" => workflow.push_str(include_str!("test.yaml")),
             "typos" => workflow.push_str(include_str!("typos.yaml")),
+            "doc" => workflow.push_str(include_str!("doc.yaml")),
             job => {
                 return Err(format!("unrecognized job {job}"));
             }

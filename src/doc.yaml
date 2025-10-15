@@ -1,5 +1,5 @@
-  check:
-    name: cargo check
+  doc:
+    name: cargo doc
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -11,4 +11,4 @@
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo check --all-features --workspace
+      - run: cargo doc --no-deps
