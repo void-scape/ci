@@ -59,4 +59,4 @@ jobs:
       steps:
         - uses: actions/checkout@v5
         - uses: dtolnay/rust-toolchain@stable
-          run: cargo install typos-cli && typos
+        - run: cargo install typos-cli && typos
