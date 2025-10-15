@@ -7,7 +7,7 @@ pub fn generate_workflow(
     for job in jobs {
         if !jobs_prefix {
             jobs_prefix = true;
-            workflow.push_str("\njobs:\n");
+            workflow.push_str("jobs:\n");
         }
         match job.as_ref() {
             "test" => workflow.push_str(include_str!("test.yaml")),

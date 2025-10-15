@@ -1,17 +1,13 @@
-# MIT License
-# Copyright (c) 2020 GitHub
-
+# Generated with ci tool
+# Source: https://github.com/void-scape/ci
 name: ci
-
 on:
   push:
     branches: [ $default-branch ]
   pull_request:
     branches: [ $default-branch ]
-
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   # Based on workflow template from rust-ci-release-template
   # Copyright 2021 Dotan Nahum

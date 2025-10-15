@@ -1,13 +1,10 @@
-# MIT License
-# Copyright (c) 2020 GitHub
-
+# Generated with ci tool
+# Source: https://github.com/void-scape/ci
 name: <name>
-
 on:
   push:
     branches: [ $default-branch ]
   pull_request:
     branches: [ $default-branch ]
-
 env:
   CARGO_TERM_COLOR: always
