@@ -12,5 +12,6 @@
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: clippy, rustfmt
+          components: clippy
+      <dep>
       - run: cargo clippy --all-features --workspace -- -D warnings

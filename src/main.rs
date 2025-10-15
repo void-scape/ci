@@ -7,7 +7,7 @@ fn main() -> ExitCode {
         Some(name) => name,
         None => {
             println!(
-                "Usage: {binary} workflow-name {}",
+                "Usage: {binary} workflow-name [-d<DEPENDENCIES>] {}",
                 ci::available_jobs()
                     .iter()
                     .map(|job| format!("[{job}]"))
@@ -18,13 +18,27 @@ fn main() -> ExitCode {
         }
     };
 
-    let workflow = match ci::generate_workflow(&workflow_name, args) {
-        Ok(workflow) => workflow,
-        Err(err) => {
-            println!("{binary}: {err}");
-            return ExitCode::FAILURE;
-        }
+    let mut peekable = args.peekable();
+    let (jobs, deps) = if peekable.peek().is_some_and(|deps| deps.starts_with("-d")) {
+        let deps = peekable
+            .next()
+            .unwrap()
+            .strip_prefix("-d")
+            .unwrap()
+            .to_string();
+        (peekable, Some(deps))
+    } else {
+        (peekable, None)
     };
+
+    let workflow =
+        match ci::generate_workflow(&workflow_name, jobs, deps.as_ref().map(|d| d.as_ref())) {
+            Ok(workflow) => workflow,
+            Err(err) => {
+                println!("{binary}: {err}");
+                return ExitCode::FAILURE;
+            }
+        };
 
     let workflow_parent = std::path::PathBuf::from(".github/workflows/");
     std::fs::create_dir_all(&workflow_parent)
