@@ -18,5 +18,8 @@ pub fn generate_workflow(
             }
         }
     }
+    if !jobs_prefix {
+        return Err("expected at least one job".to_string());
+    }
     Ok(workflow)
 }
