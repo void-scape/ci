@@ -1,0 +1,24 @@
+  # Based on workflow template from rust-ci-release-template
+  # Copyright 2021 Dotan Nahum
+  # Licensed under Apache License 2.0
+  # Source: https://github.com/SpectralOps/rust-ci-release-template
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run cargo check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check

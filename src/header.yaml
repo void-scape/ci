@@ -1,0 +1,13 @@
+# MIT License
+# Copyright (c) 2020 GitHub
+
+name: <name>
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+env:
+  CARGO_TERM_COLOR: always
